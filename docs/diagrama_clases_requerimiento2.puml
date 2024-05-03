@@ -1,0 +1,131 @@
+@startuml
+
+Persona *-- Direccion
+Persona *-- Genero
+
+CalculadoraDeDistancia *-- AdapterDistancia
+AdapterDistancia <|.. AdapterDistanceMatrixAPI
+
+Notificador *-- TipoDeNotificacion
+TipoDeNotificacion <|.. NotificarSolicitudDeCuidado
+TipoDeNotificacion <|.. NotificarComienzoDeCuidado
+TipoDeNotificacion <|.. NotificarFinDeCuidado
+NotificarComienzoDeCuidado ..> CalculadoraDeTiempoDeDemora
+
+ManejadorDeIncidente *-- RespuestaAIncidente
+RespuestaAIncidente <|.. AlertarCuidadores
+RespuestaAIncidente <|.. LlamarALaPolicia
+RespuestaAIncidente <|.. LlamarAlCelularDelUsuario
+RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
+
+class Persona {
+ -nombre: String
+ -apellido: String
+ -dirección: Direccion
+ -paradas: List<Destino> //primer elemento de la lista es el punto de partida, segundo elemento es la primer parada, tercer elemento es la segunda parada y asi sucesivamente
+ -fechaNacimiento: LocalDate
+ -genero: Genero
+ -cuidadores: List<Persona>
+ -celular: String
+ -cantidadDeMinutosPorFalsaAlarma: Integer
+}
+
+class Direccion{
+ -calle: String
+ -altura: String
+ -piso: String
+}
+
+class Genero{
+ -nombre: String
+}
+
+class Destino{
+ -calle: String
+ -altura: String
+ -piso: String
+ -cantMinutos: Integer
+}
+
+class CalculadoraDeTiempoDeDemora{
+ public Integer calcularTiempoEntreDestinos(Destino destinoInicial, Destino destinoFinal){
+    double dis = calcularDistanciaEntre(destinoInicial, destinoFinal)
+    double vel = 4.5
+    return Integer(dis / vel)
+ }
+
+ public Integer calcularTiempoRecorrido(Persona persona){
+    Integer acumulador=0;
+    Integer i=0;
+    Integer cantParadas = persona.paradas.length()
+    while(personas.paradas.get(i) != (personas.paradas.get(cantParadas)){
+       acumulador += calcularTiempoEntreDestinos(persona.paradas.get(i),persona.paradas.get(i+1))
+       acumulador += persona.paradas.cantMinutos();
+    }
+    return
+ }
+
+ }
+}
+
+class CalculadoraDeDistancia{
+ -adapterDistancia: AdapterDistancia
+ +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+interface AdapterDistancia{
+ +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+class AdapterDistanceMatrixAPI{
+ -distanceMatrixAPI: DistanceMatrixAPI
+ +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+class Notificador{
+ -tipoDeNotificacion: TipoDeNotificacion
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+}
+
+interface TipoDeNotificacion{
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+}
+
+class NotificarSolicitudDeCuidado{
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+}
+
+class NotificarComienzoDeCuidado{
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+}
+
+class NotificarFinDeCuidado{
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+}
+
+class ManejadorDeIncidente{
+ -respuestaAIncidente: RespuestaAIncidente
+ +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+}
+
+interface RespuestaAIncidente{
+ +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+}
+
+class AlertarCuidadores{
+ +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+}
+
+class LlamarALaPolicia{
+ +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+}
+
+class LlamarAlCelularDelUsuario{
+ +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+}
+
+class EsperarPorSiEsUnaFalsaAlarma{
+ +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+}
+
+@enduml
