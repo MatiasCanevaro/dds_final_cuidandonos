@@ -2,40 +2,36 @@
 
 Persona *-- Direccion
 Persona *-- Genero
-Persona o-- "*" Persona
+
+Viaje o-- "*" Persona
+Viaje *-- Direccion
 
 CalculadoraDeDistancia *-- AdapterDistancia
 AdapterDistancia <|.. AdapterDistanceMatrixAPI
+AdapterDistancia ..> Direccion
 
 Notificador *-- TipoDeNotificacion
 TipoDeNotificacion <|.. NotificarSolicitudDeCuidado
 TipoDeNotificacion <|.. NotificarComienzoDeCuidado
 TipoDeNotificacion <|.. NotificarFinDeCuidado
-NotificarComienzoDeCuidado ..> CalculadoraDeTiempoDeDemora
+TipoDeNotificacion ..> Viaje
 
 ManejadorDeIncidente *-- RespuestaAIncidente
 RespuestaAIncidente <|.. AlertarCuidadores
 RespuestaAIncidente <|.. LlamarALaPolicia
 RespuestaAIncidente <|.. LlamarAlCelularDelUsuario
 RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
+RespuestaAIncidente ..> Viaje
 
-
-TipoDeNotificacion ..> Persona
-TipoDeNotificacion ..> Direccion
-
-AdapterDistancia ..> Direccion
-
-RespuestaAIncidente ..> Persona
-RespuestaAIncidente ..> Direccion
+CalculadoraDeTiempoDeDemora ..> Direccion
 
 
 class Persona {
  -nombre: String
  -apellido: String
- -dirección: Direccion
+ -domicilio: Direccion
  -fechaNacimiento: LocalDate
  -genero: Genero
- -cuidadores: List<Persona>
  -notificacionesHabilitadas: Boolean
  -celular: String
  -cantidadDeMinutosPorFalsaAlarma: Integer
@@ -49,6 +45,15 @@ class Direccion{
 
 class Genero{
  -nombre: String
+}
+
+class Viaje{
+ -transeunte: Persona
+ -cuidadores: List<Persona>
+ -destinoInicial: Direccion
+ -destinoFinal: Direccion
+ -tiempoDeDemoraAproximadoEnMinutosCalculado: Integer
+ -distanciaEnKMEntreDestinosCalculada: Double
 }
 
 class CalculadoraDeTiempoDeDemora{
@@ -71,48 +76,48 @@ class AdapterDistanceMatrixAPI{
 
 class Notificador{
  -tipoDeNotificacion: TipoDeNotificacion
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +notificarCuidadores(Viaje): void
 }
 
 interface TipoDeNotificacion{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +notificarCuidadores(Viaje): void
 }
 
 class NotificarSolicitudDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +notificarCuidadores(Viaje): void
 }
 
 class NotificarComienzoDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +notificarCuidadores(Viaje): void
 }
 
 class NotificarFinDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +notificarCuidadores(Viaje): void
 }
 
 class ManejadorDeIncidente{
  -respuestaAIncidente: RespuestaAIncidente
- +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +responderFrenteAIncidente(Viaje): void
 }
 
 interface RespuestaAIncidente{
- +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +responderFrenteAIncidente(Viaje): void
 }
 
 class AlertarCuidadores{
- +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +responderFrenteAIncidente(Viaje): void
 }
 
 class LlamarALaPolicia{
- +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +responderFrenteAIncidente(Viaje): void
 }
 
 class LlamarAlCelularDelUsuario{
- +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +responderFrenteAIncidente(Viaje): void
 }
 
 class EsperarPorSiEsUnaFalsaAlarma{
- +responderFrenteAIncidente(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
+ +responderFrenteAIncidente(Viaje): void
 }
 
 @enduml
