@@ -2,6 +2,7 @@
 
 Persona *-- Direccion
 Persona *-- Genero
+Persona o-- "*" Persona
 
 CalculadoraDeDistancia *-- AdapterDistancia
 AdapterDistancia <|.. AdapterDistanceMatrixAPI
@@ -18,6 +19,16 @@ RespuestaAIncidente <|.. LlamarALaPolicia
 RespuestaAIncidente <|.. LlamarAlCelularDelUsuario
 RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
 
+
+TipoDeNotificacion ..> Persona
+TipoDeNotificacion ..> Direccion
+
+AdapterDistancia ..> Direccion
+
+RespuestaAIncidente ..> Persona
+RespuestaAIncidente ..> Direccion
+
+
 class Persona {
  -nombre: String
  -apellido: String
@@ -25,6 +36,7 @@ class Persona {
  -fechaNacimiento: LocalDate
  -genero: Genero
  -cuidadores: List<Persona>
+ -notificacionesHabilitadas: Boolean
  -celular: String
  -cantidadDeMinutosPorFalsaAlarma: Integer
 }
@@ -40,42 +52,42 @@ class Genero{
 }
 
 class CalculadoraDeTiempoDeDemora{
- +calcularTiempoDeDemora(Direccion destinoInicial, Direccion destinoFinal): Integer
+ +calcularTiempoDeDemoraAproximadoEnMinutos(Direccion destinoInicial, Direccion destinoFinal): Integer
 }
 
 class CalculadoraDeDistancia{
  -adapterDistancia: AdapterDistancia
- +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
 }
 
 interface AdapterDistancia{
- +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
 }
 
 class AdapterDistanceMatrixAPI{
  -distanceMatrixAPI: DistanceMatrixAPI
- +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
 }
 
 class Notificador{
  -tipoDeNotificacion: TipoDeNotificacion
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 interface TipoDeNotificacion{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class NotificarSolicitudDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class NotificarComienzoDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class NotificarFinDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class ManejadorDeIncidente{

@@ -2,6 +2,8 @@
 
 Persona *-- Direccion
 Persona *-- Genero
+Persona o-- "*" Persona
+Persona *-- "*" Destino
 
 CalculadoraDeDistancia *-- AdapterDistancia
 AdapterDistancia <|.. AdapterDistanceMatrixAPI
@@ -18,16 +20,27 @@ RespuestaAIncidente <|.. LlamarALaPolicia
 RespuestaAIncidente <|.. LlamarAlCelularDelUsuario
 RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
 
+
+TipoDeNotificacion ..> Persona
+TipoDeNotificacion ..> Direccion
+
+AdapterDistancia ..> Direccion
+
+RespuestaAIncidente ..> Persona
+RespuestaAIncidente ..> Direccion
+
+
 class Persona {
  -nombre: String
  -apellido: String
  -dirección: Direccion
- -paradas: List<Destino> //primer elemento de la lista es el punto de partida, segundo elemento es la primer parada, tercer elemento es la segunda parada y asi sucesivamente
  -fechaNacimiento: LocalDate
  -genero: Genero
  -cuidadores: List<Persona>
+ -notificacionesHabilitadas: Boolean
  -celular: String
  -cantidadDeMinutosPorFalsaAlarma: Integer
+ -paradas: List<Destino>
 }
 
 class Direccion{
@@ -44,10 +57,14 @@ class Destino{
  -calle: String
  -altura: String
  -piso: String
- -cantMinutos: Integer
+ -cantidadMinutosADetenerse: Integer
 }
 
 class CalculadoraDeTiempoDeDemora{
+ +calcularTiempoDeDemoraAproximadoTotalEnMinutos(Direccion destinoInicial, Direccion destinoFinal): Integer
+ +calcularTiempoDeDemoraAproximadoPorSeccionEnMinutos(): Integer
+}
+
  public Integer calcularTiempoEntreDestinos(Destino destinoInicial, Destino destinoFinal){
     double dis = calcularDistanciaEntre(destinoInicial, destinoFinal)
     double vel = 4.5
@@ -63,44 +80,41 @@ class CalculadoraDeTiempoDeDemora{
        acumulador += persona.paradas.cantMinutos();
     }
     return
- }
-
- }
-}
+    }
 
 class CalculadoraDeDistancia{
  -adapterDistancia: AdapterDistancia
- +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
 }
 
 interface AdapterDistancia{
- +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
 }
 
 class AdapterDistanceMatrixAPI{
  -distanceMatrixAPI: DistanceMatrixAPI
- +calcularDistanciaEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
 }
 
 class Notificador{
  -tipoDeNotificacion: TipoDeNotificacion
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 interface TipoDeNotificacion{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class NotificarSolicitudDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class NotificarComienzoDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class NotificarFinDeCuidado{
- +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal, List<Persona> cuidadores): void
+ +notificarCuidadores(Persona transeunte, Direccion destinoInicial, Direccion destinoFinal): void
 }
 
 class ManejadorDeIncidente{
