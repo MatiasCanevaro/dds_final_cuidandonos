@@ -1,14 +1,14 @@
 @startuml
 
-Persona *-- Direccion
+Persona *-- Domicilio
 Persona *-- Genero
 
 Viaje o-- "*" Persona
-Viaje *-- Direccion
+Viaje *-- "*" Destino
 
 CalculadoraDeDistancia *-- AdapterDistancia
 AdapterDistancia <|.. AdapterDistanceMatrixAPI
-AdapterDistancia ..> Direccion
+AdapterDistancia ..> Destino
 
 Notificador *-- TipoDeNotificacion
 TipoDeNotificacion <|.. NotificarSolicitudDeCuidado
@@ -23,13 +23,13 @@ RespuestaAIncidente <|.. LlamarAlCelularDelUsuario
 RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
 RespuestaAIncidente ..> Viaje
 
-CalculadoraDeTiempoDeDemora ..> Direccion
-
+CalculadoraDeTiempoDeDemora ..> Destino
+CalculadoraDeTiempoDeDemora *-- CalculadoraDeDistancia
 
 class Persona {
  -nombre: String
  -apellido: String
- -domicilio: Direccion
+ -domicilio: Domicilio
  -fechaNacimiento: LocalDate
  -genero: Genero
  -notificacionesHabilitadas: Boolean
@@ -37,10 +37,17 @@ class Persona {
  -cantidadDeMinutosPorFalsaAlarma: Integer
 }
 
-class Direccion{
+class Domicilio{
  -calle: String
  -altura: String
  -piso: String
+}
+
+class Destino{
+ -calle: String
+ -altura: String
+ -piso: String
+ -cantidadMinutosADetenerse: Integer
 }
 
 class Genero{
@@ -50,28 +57,28 @@ class Genero{
 class Viaje{
  -transeunte: Persona
  -cuidadores: List<Persona>
- -destinoInicial: Direccion
- -destinoFinal: Direccion
+ -paradas: List<Destino>
  -tiempoDeDemoraAproximadoEnMinutosCalculado: Integer
  -distanciaEnKMEntreDestinosCalculada: Double
 }
 
 class CalculadoraDeTiempoDeDemora{
- +calcularTiempoDeDemoraAproximadoEnMinutos(Direccion destinoInicial, Direccion destinoFinal): Integer
+ -calculadoraDeDistancia: CalculadoraDeDistancia
+ +calcularTiempoDeDemoraAproximadoEnMinutos(List<Destino> paradas): Integer
 }
 
 class CalculadoraDeDistancia{
  -adapterDistancia: AdapterDistancia
- +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
 }
 
 interface AdapterDistancia{
- +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
 }
 
 class AdapterDistanceMatrixAPI{
  -distanceMatrixAPI: DistanceMatrixAPI
- +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
 }
 
 class Notificador{

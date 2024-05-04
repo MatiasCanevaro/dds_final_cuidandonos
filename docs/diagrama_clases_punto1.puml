@@ -1,0 +1,124 @@
+@startuml
+
+Persona *-- Destino
+Persona *-- Genero
+
+Viaje o-- "*" Persona
+Viaje *-- Destino
+
+CalculadoraDeDistancia *-- AdapterDistancia
+AdapterDistancia <|.. AdapterDistanceMatrixAPI
+AdapterDistancia ..> Destino
+
+Notificador *-- TipoDeNotificacion
+TipoDeNotificacion <|.. NotificarSolicitudDeCuidado
+TipoDeNotificacion <|.. NotificarComienzoDeCuidado
+TipoDeNotificacion <|.. NotificarFinDeCuidado
+TipoDeNotificacion ..> Viaje
+
+ManejadorDeIncidente *-- RespuestaAIncidente
+RespuestaAIncidente <|.. AlertarCuidadores
+RespuestaAIncidente <|.. LlamarALaPolicia
+RespuestaAIncidente <|.. LlamarAlCelularDelUsuario
+RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
+RespuestaAIncidente ..> Viaje
+
+CalculadoraDeTiempoDeDemora ..> Destino
+CalculadoraDeTiempoDeDemora *-- CalculadoraDeDistancia
+
+class Persona {
+ -nombre: String
+ -apellido: String
+ -domicilio: Destino
+ -fechaNacimiento: LocalDate
+ -genero: Genero
+ -notificacionesHabilitadas: Boolean
+ -celular: String
+ -cantidadDeMinutosPorFalsaAlarma: Integer
+}
+
+class Destino{
+ -calle: String
+ -altura: String
+ -piso: String
+}
+
+class Genero{
+ -nombre: String
+}
+
+class Viaje{
+ -transeunte: Persona
+ -cuidadores: List<Persona>
+ -destinoInicial: Destino
+ -destinoFinal: Destino
+ -tiempoDeDemoraAproximadoEnMinutosCalculado: Integer
+ -distanciaEnKMEntreDestinosCalculada: Double
+}
+
+class CalculadoraDeTiempoDeDemora{
+ -calculadoraDeDistancia: CalculadoraDeDistancia
+ +calcularTiempoDeDemoraAproximadoEnMinutos(Destino destinoInicial, Destino destinoFinal): Integer
+}
+
+class CalculadoraDeDistancia{
+ -adapterDistancia: AdapterDistancia
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
+}
+
+interface AdapterDistancia{
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
+}
+
+class AdapterDistanceMatrixAPI{
+ -distanceMatrixAPI: DistanceMatrixAPI
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
+}
+
+class Notificador{
+ -tipoDeNotificacion: TipoDeNotificacion
+ +notificarCuidadores(Viaje): void
+}
+
+interface TipoDeNotificacion{
+ +notificarCuidadores(Viaje): void
+}
+
+class NotificarSolicitudDeCuidado{
+ +notificarCuidadores(Viaje): void
+}
+
+class NotificarComienzoDeCuidado{
+ +notificarCuidadores(Viaje): void
+}
+
+class NotificarFinDeCuidado{
+ +notificarCuidadores(Viaje): void
+}
+
+class ManejadorDeIncidente{
+ -respuestaAIncidente: RespuestaAIncidente
+ +responderFrenteAIncidente(Viaje): void
+}
+
+interface RespuestaAIncidente{
+ +responderFrenteAIncidente(Viaje): void
+}
+
+class AlertarCuidadores{
+ +responderFrenteAIncidente(Viaje): void
+}
+
+class LlamarALaPolicia{
+ +responderFrenteAIncidente(Viaje): void
+}
+
+class LlamarAlCelularDelUsuario{
+ +responderFrenteAIncidente(Viaje): void
+}
+
+class EsperarPorSiEsUnaFalsaAlarma{
+ +responderFrenteAIncidente(Viaje): void
+}
+
+@enduml
