@@ -59,7 +59,6 @@ class Viaje{
  -cuidadores: List<Persona>
  -paradas: List<Destino>
  -tiempoDeDemoraAproximadoEnMinutosCalculado: Integer
- -distanciaEnKMEntreDestinosCalculada: Double
 }
 
 class CalculadoraDeTiempoDeDemora{

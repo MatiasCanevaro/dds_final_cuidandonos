@@ -53,7 +53,6 @@ class Viaje{
  -destinoInicial: Destino
  -destinoFinal: Destino
  -tiempoDeDemoraAproximadoEnMinutosCalculado: Integer
- -distanciaEnKMEntreDestinosCalculada: Double
 }
 
 class CalculadoraDeTiempoDeDemora{
