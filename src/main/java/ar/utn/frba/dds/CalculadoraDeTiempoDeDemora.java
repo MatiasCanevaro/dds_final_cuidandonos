@@ -9,8 +9,8 @@ public class CalculadoraDeTiempoDeDemora {
             Destino destinoInicial = paradas.get(i);
             Destino destinoFinal = paradas.get(i+1);
             distanciaEnKMTotal += calculadoraDeDistancia.calcularDistanciaEnKMEntre(destinoInicial,destinoFinal);
-            if(destinoInicial.cantidadMinutosADetenerse()>0){
-                tiempoDetenidoEnMinutos += destinoInicial.cantidadMinutosADetenerse();
+            if(destinoInicial.getCantidadMinutosADetenerse()>0){
+                tiempoDetenidoEnMinutos += destinoInicial.getCantidadMinutosADetenerse();
             }
         }
 
