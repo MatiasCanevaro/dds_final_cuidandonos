@@ -9,6 +9,7 @@ Viaje *-- Destino
 CalculadoraDeDistancia *-- AdapterDistancia
 AdapterDistancia <|.. AdapterDistanceMatrixAPI
 AdapterDistancia ..> Destino
+AdapterDistanceMatrixAPI *-- DistanceMatrixAPI
 
 Notificador *-- TipoDeNotificacion
 TipoDeNotificacion <|.. NotificarSolicitudDeCuidado
@@ -71,6 +72,10 @@ interface AdapterDistancia{
 
 class AdapterDistanceMatrixAPI{
  -distanceMatrixAPI: DistanceMatrixAPI
+ +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
+}
+
+class DistanceMatrixAPI{
  +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
 }
 
