@@ -25,7 +25,7 @@ RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
 RespuestaAIncidente ..> Viaje
 
 CalculadoraDeTiempoDeDemora ..> Destino
-CalculadoraDeTiempoDeDemora o-- CalculadoraDeDistancia
+CalculadoraDeTiempoDeDemora ..> CalculadoraDeDistancia
 
 class Persona {
  -nombre: String
@@ -45,9 +45,8 @@ class Domicilio{
 }
 
 class Destino{
- -calle: String
- -altura: String
- -piso: String
+ -latitud: String
+ -longitud: String
  -cantidadMinutosADetenerse: Integer
 }
 
@@ -63,8 +62,7 @@ class Viaje{
 }
 
 class CalculadoraDeTiempoDeDemora{
- -calculadoraDeDistancia: CalculadoraDeDistancia
- +calcularTiempoDeDemoraAproximadoEnMinutos(List<Destino> paradas): Integer
+ +calcularTiempoDeDemoraAproximadoEnMinutos(CalculadoraDeDistancia calculadoraDeDistancia, List<Destino> paradas): Integer
 }
 
 class CalculadoraDeDistancia{

@@ -1,9 +1,7 @@
 package ar.utn.frba.dds;
 
-public class CalculadoraDeTiempoDeDemora
-{
-    private CalculadoraDeDistancia calculadoraDeDistancia;
-    public Integer calcularTiempoDeDemoraAproximadoEnMinutos(List<Destino> paradas){
+public class CalculadoraDeTiempoDeDemora {
+    public Integer calcularTiempoDeDemoraAproximadoEnMinutos(CalculadoraDeDistancia calculadoraDeDistancia, List<Destino> paradas){
         Double distanciaEnKMTotal = 0.0;
         Integer tiempoDetenidoEnMinutos = 0;
 

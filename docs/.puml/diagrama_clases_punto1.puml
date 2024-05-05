@@ -1,6 +1,6 @@
 @startuml
 
-Persona *-- Destino
+Persona *-- Domicilio
 Persona *-- Genero
 
 Viaje o-- "*" Persona
@@ -25,12 +25,12 @@ RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
 RespuestaAIncidente ..> Viaje
 
 CalculadoraDeTiempoDeDemora ..> Destino
-CalculadoraDeTiempoDeDemora o-- CalculadoraDeDistancia
+CalculadoraDeTiempoDeDemora ..> CalculadoraDeDistancia
 
 class Persona {
  -nombre: String
  -apellido: String
- -domicilio: Destino
+ -domicilio: Domicilio
  -fechaNacimiento: LocalDate
  -genero: Genero
  -notificacionesHabilitadas: Boolean
@@ -38,10 +38,15 @@ class Persona {
  -cantidadDeMinutosPorFalsaAlarma: Integer
 }
 
-class Destino{
+class Domicilio{
  -calle: String
  -altura: String
  -piso: String
+}
+
+class Destino{
+ -latitud: String
+ -longitud: String
 }
 
 class Genero{
@@ -57,8 +62,7 @@ class Viaje{
 }
 
 class CalculadoraDeTiempoDeDemora{
- -calculadoraDeDistancia: CalculadoraDeDistancia
- +calcularTiempoDeDemoraAproximadoEnMinutos(Destino destinoInicial, Destino destinoFinal): Integer
+ +calcularTiempoDeDemoraAproximadoEnMinutos(CalculadoraDeDistancia calculadoraDeDistancia, Destino destinoInicial, Destino destinoFinal): Integer
 }
 
 class CalculadoraDeDistancia{
