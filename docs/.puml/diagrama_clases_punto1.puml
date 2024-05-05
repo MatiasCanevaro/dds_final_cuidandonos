@@ -24,7 +24,7 @@ RespuestaAIncidente <|.. EsperarPorSiEsUnaFalsaAlarma
 RespuestaAIncidente ..> Viaje
 
 CalculadoraDeTiempoDeDemora ..> Destino
-CalculadoraDeTiempoDeDemora *-- CalculadoraDeDistancia
+CalculadoraDeTiempoDeDemora o-- CalculadoraDeDistancia
 
 class Persona {
  -nombre: String
